@@ -1,118 +1,182 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import hero1 from "../assets/Hero/hero1.mp4";
+import hero2 from "../assets/Hero/hero2.mp4";
+import chocolateImg from "../assets/Hero/Img1.png";
+import berryImg from "../assets/Hero/Img2.png";
+import coffeeImg from "../assets/Hero/coffee.png";
+import Button from "./Button";
 
-const TOTAL_FRAMES = 208;
-const PAD = 3;
-
-const frameSrc = (i: number) =>
-  `/frames/ezgif-frame-${String(i).padStart(PAD, "0")}.jpg`;
+const items = [
+  { 
+    title: "Chocolate Bliss", 
+    desc: "Indulge in a towering masterpiece of rich cocoa, topped with fluffy whipped cream and fudgy brownie chunks. It's the ultimate treat to satisfy your deepest chocolate cravings.",
+    img: chocolateImg 
+  },
+  { 
+    title: "Berry Blast", 
+    desc: "Experience a vibrant explosion of fresh strawberries and mixed berries blended to creamy perfection. Garnished with mint, it's a refreshing escape in every single sip.",
+    img: berryImg 
+  },
+  { 
+    title: "Classic Frappe", 
+    desc: "Wake up your senses with our perfectly chilled iced coffee, swirled with buttery caramel and a light, airy foam. Handcrafted to deliver a smooth and energizing kick.",
+    img: coffeeImg 
+  },
+];
 
 export default function FrameSequenceHero() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const images = useRef<HTMLImageElement[]>([]);
-  const frameIndex = useRef(0);
+  const [activeVideo, setActiveVideo] = useState<0 | 1>(0);
+  const video0Ref = useRef<HTMLVideoElement>(null);
+  const video1Ref = useRef<HTMLVideoElement>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const titlesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({ repeat: -1 });
+
+    // Explicitly hide all wrapper h1s and images at the start.
+    tl.set(titlesRef.current, { autoAlpha: 0 })
+      .set(imagesRef.current, { autoAlpha: 0, y: -150 });
+
+    items.forEach((_, i) => {
+      const chars = titlesRef.current[i]?.querySelectorAll(".char");
+      const desc = titlesRef.current[i]?.querySelector(".desc");
+      const btn = titlesRef.current[i]?.querySelector(".action-btn");
+
+      // 1. Initial State: Title hidden, characters moved, desc moved, Image moved
+      tl.set(titlesRef.current[i], { autoAlpha: 0 }, "start" + i)
+        .set(chars, { x: -80, y: 30, autoAlpha: 0 }, "start" + i)
+        .set(desc, { y: 20, autoAlpha: 0 }, "start" + i)
+        .set(btn, { y: 20, autoAlpha: 0 }, "start" + i)
+        .set(imagesRef.current[i], { y: -150, autoAlpha: 0 }, "start" + i);
+
+      // 2. Animate IN (staggered sync)
+      tl.set(titlesRef.current[i], { autoAlpha: 1 }, "in" + i) // Reveal wrapper
+        .to(chars, { x: 0, y: 0, autoAlpha: 1, duration: 0.8, ease: "back.out(1.2)", stagger: 0.03 }, "in" + i)
+        .to(desc, { y: 0, autoAlpha: 1, duration: 0.8, ease: "power3.out" }, "in" + i + "+=0.3") // desc enters slightly after title
+        .to(btn, { y: 0, autoAlpha: 1, duration: 0.8, ease: "power3.out" }, "in" + i + "+=0.4") // btn enters slightly after desc
+        .to(imagesRef.current[i], { y: 0, autoAlpha: 1, duration: 1.2, ease: "power3.out" }, "in" + i);
+
+      // 3. Display duration
+      tl.to({}, { duration: 1.8 });
+
+      // 4. Animate OUT (staggered sync)
+      tl.to(chars, { x: 80, y: -20, autoAlpha: 0, duration: 0.5, ease: "power3.in", stagger: 0.02 }, "out" + i)
+        .to(desc, { y: -20, autoAlpha: 0, duration: 0.5, ease: "power3.in" }, "out" + i + "+=0.1")
+        .to(btn, { y: -20, autoAlpha: 0, duration: 0.5, ease: "power3.in" }, "out" + i + "+=0.2")
+        .to(imagesRef.current[i], { y: 150, autoAlpha: 0, duration: 0.8, ease: "power3.in" }, "out" + i)
+        .set(titlesRef.current[i], { autoAlpha: 0 }); // Hide wrapper after out
+    });
+  }, { scope: containerRef });
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const imgs: HTMLImageElement[] = [];
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
-      const img = new Image();
-      img.src = frameSrc(i);
-      imgs.push(img);
-    }
-    images.current = imgs;
-
-    const draw = (index: number) => {
-      const img = images.current[index];
-      if (!img || !img.naturalWidth) return;
-
-      const cw = window.innerWidth;
-      const ch = window.innerHeight;
-
-      // "cover" logic: scale image so it fills the viewport, then center it
-      const imgRatio = img.naturalWidth / img.naturalHeight;
-      const vpRatio = cw / ch;
-
-      let drawW: number, drawH: number, dx: number, dy: number;
-      if (imgRatio > vpRatio) {
-        // image is wider than viewport → match height, crop sides
-        drawH = ch;
-        drawW = ch * imgRatio;
-        dx = (cw - drawW) / 2;
-        dy = 0;
-      } else {
-        // image is taller than viewport → match width, crop top/bottom
-        drawW = cw;
-        drawH = cw / imgRatio;
-        dx = 0;
-        dy = (ch - drawH) / 2;
-      }
-
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-      ctx.clearRect(0, 0, cw, ch);
-      ctx.drawImage(img, dx, dy, drawW, drawH);
-    };
-
-    const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      draw(frameIndex.current);
-    };
-    resize();
-
-    const spacer = document.getElementById("frames-spacer") as HTMLElement;
-
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          const maxScroll = spacer.offsetHeight - window.innerHeight;
-          const progress = Math.min(scrollY / Math.max(maxScroll, 1), 1);
-          const index = Math.round(progress * (TOTAL_FRAMES - 1));
-          if (index !== frameIndex.current) {
-            frameIndex.current = index;
-            draw(index);
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", resize);
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", resize);
-    };
+    // Set slightly slow playback speed
+    if (video0Ref.current) video0Ref.current.playbackRate = 0.6;
+    if (video1Ref.current) video1Ref.current.playbackRate = 0.6;
   }, []);
 
+  const handleVideoEnded = () => {
+    setActiveVideo((prev) => (prev === 0 ? 1 : 0));
+  };
+
+  useEffect(() => {
+    const playVideo = async () => {
+      try {
+        if (activeVideo === 0 && video0Ref.current) {
+          video0Ref.current.currentTime = 0;
+          await video0Ref.current.play();
+        } else if (activeVideo === 1 && video1Ref.current) {
+          video1Ref.current.currentTime = 0;
+          await video1Ref.current.play();
+        }
+      } catch (err) {
+        console.error("Video play error:", err);
+      }
+    };
+    playVideo();
+  }, [activeVideo]);
+
   return (
-    <section className="relative">
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 w-full h-full"
-        style={{ objectFit: "cover" }}
+    <section className="relative w-full h-screen overflow-hidden bg-background">
+      {/* Video Backgrounds */}
+      <video
+        ref={video0Ref}
+        src={hero1}
+        muted
+        playsInline
+        autoPlay
+        onEnded={handleVideoEnded}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+          activeVideo === 0 ? "opacity-100" : "opacity-0"
+        }`}
       />
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 text-center text-white">
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-7xl">
-          CupShake
-        </h1>
-        <p className="mt-4 max-w-md text-base text-white/80 sm:text-lg md:text-xl">
-          Scroll to animate the background frame by frame
-        </p>
+      <video
+        ref={video1Ref}
+        src={hero2}
+        muted
+        playsInline
+        onEnded={handleVideoEnded}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+          activeVideo === 1 ? "opacity-100" : "opacity-0"
+        }`}
+      />
+
+      {/* Overlay of background color */}
+      <div className="absolute inset-0 bg-background opacity-90 mix-blend-multiply pointer-events-none" />
+
+      {/* 60 / 40 Two-column layout */}
+      <div ref={containerRef} className="relative z-10 flex flex-col md:flex-row h-full w-full">
+        {/* Left column — 60% */}
+        <div className="relative w-full md:w-[60%] h-1/2 md:h-full flex flex-col justify-center overflow-hidden">
+          {items.map((item, i) => (
+            <div
+              key={i}
+              ref={(el) => { titlesRef.current[i] = el; }}
+              className="absolute left-6 md:left-20 flex flex-col justify-start invisible max-w-2xl h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] -translate-y-1/2 top-1/2"
+            >
+              <div>
+                <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight text-foreground drop-shadow-lg leading-tight">
+                  {item.title.split(" ").map((word, wIdx, arr) => (
+                    <span key={wIdx} className="inline-block whitespace-nowrap">
+                      {word.split("").map((char, cIdx) => (
+                        <span key={cIdx} className="inline-block char">
+                          {char}
+                        </span>
+                      ))}
+                      {wIdx !== arr.length - 1 && <span className="inline-block char">&nbsp;</span>}
+                    </span>
+                  ))}
+                </h1>
+                <p className="desc mt-6 text-lg sm:text-xl md:text-2xl text-foreground/90 leading-relaxed drop-shadow-md">
+                  {item.desc}
+                </p>
+              </div>
+              <div className="action-btn mt-auto flex items-start">
+                <Button onClick={() => console.log(`Order ${item.title}`)}>
+                  Get Now &rarr;
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Right column — 40% */}
+        <div className="relative w-full md:w-[40%] h-1/2 md:h-full flex items-center justify-center overflow-hidden">
+          {items.map((item, i) => (
+            <img
+              key={i}
+              ref={(el) => { imagesRef.current[i] = el; }}
+              src={item.img}
+              alt={item.title}
+              className="absolute h-[80%] max-h-[600px] object-contain invisible drop-shadow-2xl"
+            />
+          ))}
+        </div>
       </div>
-      <div id="frames-spacer" className="relative" style={{ height: "500vh" }} />
     </section>
   );
 }
