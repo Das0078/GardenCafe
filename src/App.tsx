@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import FrameSequenceHero from "./components/FrameSequenceHero";
 import SplashScreen from "./components/SplashScreen";
+import SpecialtySection from "./components/SpecialtySection";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
@@ -90,6 +91,10 @@ function App() {
       />
       {!splashComplete && <SplashScreen />}
       <FrameSequenceHero />
+      {/* Speciallity */}
+      <SpecialtySection />
+
+      // Menu
     </div>
   );
 }

@@ -50,3 +50,49 @@ body {
 
 /*color palette
 https://coolors.co/400406-7f5539-9c6644-b08968-adc178-ffdcc2*/
+
+/* === Card Carousel (Swiper) Styles === */
+.card-carousel-root .swiper {
+  width: 100%;
+  padding-bottom: 50px;
+}
+
+.card-carousel-root .swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 300px;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+@media (max-width: 640px) {
+  .card-carousel-root .swiper-slide {
+    width: 220px;
+  }
+}
+
+.card-carousel-root .swiper-slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.card-carousel-root .swiper-3d .swiper-slide-shadow-left {
+  background-image: none;
+}
+
+.card-carousel-root .swiper-3d .swiper-slide-shadow-right {
+  background: none;
+}
+
+/* Pagination dots styled for dark-on-light */
+.card-carousel-root .swiper-pagination-bullet {
+  background: var(--background);
+  opacity: 0.3;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.card-carousel-root .swiper-pagination-bullet-active {
+  opacity: 1;
+  transform: scale(1.3);
+}
+
