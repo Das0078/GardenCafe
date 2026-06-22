@@ -69,7 +69,7 @@ export default function Navbar() {
               className="
                 relative
                 text-white
-                text-lg
+                text-md
                 font-semibold
                 tracking-wide
                 transition-all

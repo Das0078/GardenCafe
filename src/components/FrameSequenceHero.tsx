@@ -141,7 +141,7 @@ export default function FrameSequenceHero() {
               className="absolute left-6 md:left-20 flex flex-col justify-start invisible max-w-2xl h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] -translate-y-1/2 top-1/2"
             >
               <div>
-                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[100px] font-bold tracking-tight text-foreground drop-shadow-lg leading-tight">
+                <h1 className="text-4xl mt-10 sm:text-6xl md:text-7xl lg:text-[80px] font-bold tracking-tight text-foreground drop-shadow-lg leading-tight">
                   {item.title.split(" ").map((word, wIdx, arr) => (
                     <span key={wIdx} className="inline-block whitespace-nowrap">
                       {word.split("").map((char, cIdx) => (
