@@ -6,6 +6,8 @@ import MenuSection from "./components/MenuSection";
 import TestimonialSection from "./components/testimonials/TestimonialSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
@@ -14,77 +16,99 @@ function App() {
   const logoRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    if (splashComplete) return;
+  useGSAP(
+    () => {
+      if (splashComplete) return;
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setSplashComplete(true);
-      }
-    });
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setSplashComplete(true);
+        },
+      });
 
-    // Phase 1: Center the logo and scale it up instantly
-    // (window width / 2) - 50px (half logo width) - 16px (left offset)
-    const centerX = window.innerWidth / 2 - 50 - 16;
-    const centerY = window.innerHeight / 2 - 50 - 16; 
+      const centerX = window.innerWidth / 2 - 50 - 16;
+      const centerY = window.innerHeight / 2 - 50 - 16;
 
-    const isMobile = window.innerWidth < 768;
-    const logoScale = isMobile ? 4 : 8;
+      const isMobile = window.innerWidth < 768;
+      const logoScale = isMobile ? 4 : 8;
 
-    tl.set(logoRef.current, {
-      x: centerX,
-      y: centerY,
-      scale: logoScale,
-      rotation: 0,
-      autoAlpha: 0,
-    });
+      tl.set(logoRef.current, {
+        x: centerX,
+        y: centerY,
+        scale: logoScale,
+        rotation: 0,
+        autoAlpha: 0,
+      });
 
-    // Reveal sequence
-    tl.to(logoRef.current, {
-      autoAlpha: 1,
-      duration: 1.2,
-      ease: "power2.out"
-    }, "reveal");
+      tl.to(
+        logoRef.current,
+        {
+          autoAlpha: 1,
+          duration: 1.2,
+          ease: "power2.out",
+        },
+        "reveal"
+      );
 
-    tl.fromTo(".splash-item",
-      { y: 30, autoAlpha: 0 },
-      { y: 0, autoAlpha: 1, duration: 1.0, stagger: 0.2, ease: "power3.out" },
-      "reveal+=0.3"
-    );
+      tl.fromTo(
+        ".splash-item",
+        { y: 30, autoAlpha: 0 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 1.0,
+          stagger: 0.2,
+          ease: "power3.out",
+        },
+        "reveal+=0.3"
+      );
 
-    // Phase 1: Loading Animation (progress bar fills over 6.5s)
-    tl.to(".splash-progress", {
-      width: "100%",
-      duration: 6.5,
-      ease: "power1.inOut"
-    }, "reveal+=0.5");
+      tl.to(
+        ".splash-progress",
+        {
+          width: "100%",
+          duration: 6.5,
+          ease: "power1.inOut",
+        },
+        "reveal+=0.5"
+      );
 
-    // Phase 2: Exit Transition
-    // Fade out splash background
-    tl.to(".splash-container", {
-      autoAlpha: 0,
-      duration: 1.0,
-      ease: "power3.inOut"
-    }, "exit");
+      tl.to(
+        ".splash-container",
+        {
+          autoAlpha: 0,
+          duration: 1.0,
+          ease: "power3.inOut",
+        },
+        "exit"
+      );
 
-    // Shrink and move logo back to top-left
-    tl.to(logoRef.current, {
-      x: 0,
-      y: 0,
-      scale: 1,
-      rotation: -1,
-      duration: 1.2,
-      ease: "power3.inOut"
-    }, "exit");
-
-  }, { scope: containerRef });
+      tl.to(
+        logoRef.current,
+        {
+          x: 0,
+          y: 0,
+          scale: 1,
+          rotation: -1,
+          duration: 1.2,
+          ease: "power3.inOut",
+        },
+        "exit"
+      );
+    },
+    { scope: containerRef }
+  );
 
   return (
     <div ref={containerRef}>
+      {/* Navbar */}
+      <Navbar />
+
+      {/* Animated Logo */}
       <img
         ref={logoRef}
         src="/logo/GardenCafe.png"
-        alt="CupShake Logo"
+        alt="Garden Cafe Logo"
         className="mb-10 lg:mb-0"
         style={{
           position: "fixed",
@@ -94,22 +118,33 @@ function App() {
           height: "auto",
           zIndex: 9999,
           pointerEvents: "none",
-          rotate: "-1deg"
+          rotate: "-1deg",
         }}
       />
-      { <SplashScreen />}
-      <FrameSequenceHero />
-      {/* Speciallity */}
+
+      {/* Splash Screen */}
+      {!splashComplete && <SplashScreen />}
+
+      {/* Home */}
+      <section id="home">
+        <FrameSequenceHero />
+      </section>
+
+      {/* Specialty */}
       <SpecialtySection />
 
       {/* Menu */}
-      <MenuSection />
+      <section id="menu">
+        <MenuSection />
+      </section>
 
       {/* Testimonials */}
       <TestimonialSection />
 
-      {/* contact */}
-      <ContactSection />
+      {/* Contact */}
+      <section id="contact">
+        <ContactSection />
+      </section>
 
       {/* Footer */}
       <Footer />

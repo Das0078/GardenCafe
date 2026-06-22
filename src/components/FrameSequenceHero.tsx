@@ -174,7 +174,7 @@ export default function FrameSequenceHero() {
               ref={(el) => { imagesRef.current[i] = el; }}
               src={item.img}
               alt={item.title}
-              className="absolute h-[80%] max-h-[600px] object-contain invisible drop-shadow-2xl"
+              className="absolute h-[70%] max-h-[600px] object-contain invisible drop-shadow-2xl"
             />
           ))}
         </div>
