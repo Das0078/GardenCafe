@@ -1,0 +1,6 @@
+# Garden Cafe — Newtown, Kolkata
+User-agent: *
+Allow: /
+Disallow: /assets/
+
+Sitemap: https://gardencafe.onrender.com/sitemap.xml
