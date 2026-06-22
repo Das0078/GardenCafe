@@ -23,6 +23,13 @@ body {
   color: var(--foreground);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+body {
+  overflow-x: hidden;
+}
+
 /* From Uiverse.io by adamgiebl - Adapted for theme */
 .uiverse-btn {
   background: var(--background);
