@@ -58,6 +58,7 @@ export default function SplashScreen() {
       </div>
       
       {/* Progress Bar Container */}
+      <span className="mb-2 text-foreground">56 years of journey and continuing...</span>
       <div className="splash-item w-64 md:w-80 h-1.5 bg-foreground/20 rounded-full overflow-hidden shadow-inner">
         {/* Progress Bar Fill - Animated via GSAP */}
         <div className="splash-progress h-full bg-foreground w-0 rounded-full shadow-[0_0_10px_var(--foreground)]" />

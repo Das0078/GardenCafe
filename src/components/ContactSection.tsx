@@ -7,7 +7,7 @@ import { EffectFade, Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
-import { Phone, MapPin, Navigation } from "lucide-react";
+import { Phone, MapPin, MapPinned  } from "lucide-react";
 import SectionTitle from "./SectionTitle";
 import Button from "./Button";
 
@@ -207,7 +207,7 @@ export default function ContactSection() {
                 >
                   <Button>
                     <span className="inline-flex items-center gap-2">
-                      <Navigation size={16} strokeWidth={2} />
+                      <MapPinned size={25} strokeWidth={2} />
                       Get Directions
                     </span>
                   </Button>
@@ -215,24 +215,8 @@ export default function ContactSection() {
               </div>
             </div>
 
-            {/* Google Maps embed */}
-            <div
-              ref={mapRef}
-              className="contact-map-wrapper rounded-2xl overflow-hidden"
-              style={{
-                border: "1px solid rgba(242,244,243,0.12)",
-              }}
-            >
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.0095163415244!2d88.4736633!3d22.5787474!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0275277bfbcfab%3A0x63da02817e76d8f2!2sGarden%20Cafe!5e0!3m2!1sen!2sin!4v1782091971803!5m2!1sen!2sin"
-                className="w-full aspect-[4/3] lg:aspect-video"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Garden Cafe Location"
-              />
-            </div>
+
+       
           </div>
 
           {/* ── Column 2: Swiper Fade Carousel ── */}
@@ -264,7 +248,10 @@ export default function ContactSection() {
                 </SwiperSlide>
               ))}
             </Swiper>
+
           </div>
+
+
         </div>
       </div>
     </section>

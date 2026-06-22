@@ -1,15 +1,21 @@
-import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { useAutoScroll } from "../hooks/useAutoScroll";
 
 const navItems = [
   { name: "Home", href: "#home" },
-  { name: "Menu", href: "#menu" },
+  { name: "Kitchen", href: "#menu" },
   { name: "Contact Us", href: "#contact" },
 ];
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
+  const [autoScroll, setAutoScroll] = useState(false);
+
+  const handleAutoScrollStop = useCallback(() => {
+    setAutoScroll(false);
+  }, []);
+
+  useAutoScroll(autoScroll, handleAutoScrollStop);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -38,9 +44,11 @@ export default function Navbar() {
       className={`
         fixed
         top-6
-        left-[160px]
-        right-8
+        left-0
+        right-0
         z-50
+        hidden
+        md:block
         transition-all
         duration-500
         ease-out
@@ -51,9 +59,9 @@ export default function Navbar() {
         }
       `}
     >
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-center">
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-12">
+        <div className="flex items-center gap-12">
           {navItems.map((item) => (
             <a
               key={item.name}
@@ -61,7 +69,7 @@ export default function Navbar() {
               className="
                 relative
                 text-white
-                text-base
+                text-lg
                 font-semibold
                 tracking-wide
                 transition-all
@@ -81,38 +89,85 @@ export default function Navbar() {
               {item.name}
             </a>
           ))}
-        </div>
 
-        {/* Mobile Toggle */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-white"
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      <div
-        className={`
-          md:hidden
-          overflow-hidden
-          transition-all
-          duration-300
-          ${isOpen ? "max-h-60 mt-4" : "max-h-0"}
-        `}
-      >
-        <div className="flex flex-col gap-4">
-          {navItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              onClick={() => setIsOpen(false)}
-              className="text-white text-lg font-medium"
+          {/* Auto-Scroll Toggle */}
+          <div className="relative group">
+            <button
+              onClick={() => setAutoScroll((prev) => !prev)}
+              aria-label="Toggle auto-scroll"
+              className="
+                relative
+                w-[52px]
+                h-[28px]
+                rounded-full
+                cursor-pointer
+                border-none
+                outline-none
+                transition-colors
+                duration-500
+                ease-[cubic-bezier(0.4,0,0.2,1)]
+                flex-shrink-0
+              "
+              style={{
+                backgroundColor: autoScroll
+                  ? "var(--foreground)"
+                  : "rgba(255,255,255,0.15)",
+              }}
             >
-              {item.name}
-            </a>
-          ))}
+              {/* Thumb */}
+              <span
+                className="
+                  absolute
+                  top-[3px]
+                  block
+                  w-[22px]
+                  h-[22px]
+                  rounded-full
+                  shadow-md
+                  transition-all
+                  duration-500
+                  ease-[cubic-bezier(0.4,0,0.2,1)]
+                "
+                style={{
+                  left: autoScroll ? "27px" : "3px",
+                  backgroundColor: autoScroll
+                    ? "var(--background)"
+                    : "rgba(255,255,255,0.6)",
+                }}
+              />
+            </button>
+
+            {/* Tooltip */}
+            <span
+              className="
+                pointer-events-none
+                absolute
+                left-1/2
+                -translate-x-1/2
+                top-full
+                mt-2
+                px-3
+                py-1.5
+                rounded-md
+                text-xs
+                font-medium
+                whitespace-nowrap
+                opacity-0
+                scale-95
+                group-hover:opacity-100
+                group-hover:scale-100
+                transition-all
+                duration-300
+                ease-out
+              "
+              style={{
+                backgroundColor: "var(--foreground)",
+                color: "var(--background)",
+              }}
+            >
+              {autoScroll ? "Auto-scroll On" : "Auto-scroll Off"}
+            </span>
+          </div>
         </div>
       </div>
     </nav>

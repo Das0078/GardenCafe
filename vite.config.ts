@@ -17,6 +17,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ['ito7mp-ip-47-30-241-192.tunnelmole.net'],
+    allowedHosts: ['uomjj0-ip-47-30-244-36.tunnelmole.net'],
   },
 })

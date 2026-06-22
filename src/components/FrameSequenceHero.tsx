@@ -10,18 +10,18 @@ import Button from "./Button";
 
 const items = [
   { 
-    title: "Chocolate Bliss", 
-    desc: "Indulge in a towering masterpiece of rich cocoa, topped with fluffy whipped cream and fudgy brownie chunks. It's the ultimate treat to satisfy your deepest chocolate cravings.",
+    title: "Desi South Indian Menu", 
+    desc: "Crispy dosas, fluffy idlis, and golden vadas served with authentic chutneys and sambar. A taste of South India crafted fresh, just the way you remember it.",
     img: chocolateImg 
   },
   { 
-    title: "Berry Blast", 
-    desc: "Experience a vibrant explosion of fresh strawberries and mixed berries blended to creamy perfection. Garnished with mint, it's a refreshing escape in every single sip.",
+    title: "Spicy Evening Snacks", 
+    desc: "From fiery vada pav and loaded sandwiches to cheesy pizzas and crispy fries. Perfect bites to fuel your evenings with bold, street-style flavors.",
     img: berryImg 
   },
   { 
-    title: "Classic Frappe", 
-    desc: "Wake up your senses with our perfectly chilled iced coffee, swirled with buttery caramel and a light, airy foam. Handcrafted to deliver a smooth and energizing kick.",
+    title: "Sweet Touch of Home", 
+    desc: "Sip on chilled cold coffee, bite into fresh-baked pastries, and crumble through buttery cookies. Every treat here feels like a warm hug from home.",
     img: coffeeImg 
   },
 ];
@@ -103,7 +103,7 @@ export default function FrameSequenceHero() {
   }, [activeVideo]);
 
   return (
-    <section className="relative w-full h-screen overflow-hidden bg-background">
+    <section className="relative w-full h-screen overflow-hidden bg-black">
       {/* Video Backgrounds */}
       <video
         ref={video0Ref}
@@ -131,7 +131,7 @@ export default function FrameSequenceHero() {
       <div className="absolute inset-0 bg-background opacity-90 mix-blend-multiply pointer-events-none" />
 
       {/* 60 / 40 Two-column layout */}
-      <div ref={containerRef} className="relative z-10 flex flex-col md:flex-row h-full w-full">
+      <div ref={containerRef} className="relative mt-5 md:mt-0 z-10 flex flex-col md:flex-row h-full w-full">
         {/* Left column — 60% */}
         <div className="relative w-full md:w-[60%] h-1/2 md:h-full flex flex-col justify-center overflow-hidden">
           {items.map((item, i) => (
@@ -141,7 +141,7 @@ export default function FrameSequenceHero() {
               className="absolute left-6 md:left-20 flex flex-col justify-start invisible max-w-2xl h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] -translate-y-1/2 top-1/2"
             >
               <div>
-                <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight text-foreground drop-shadow-lg leading-tight">
+                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-7.8xl font-bold tracking-tight text-foreground drop-shadow-lg leading-tight">
                   {item.title.split(" ").map((word, wIdx, arr) => (
                     <span key={wIdx} className="inline-block whitespace-nowrap">
                       {word.split("").map((char, cIdx) => (
@@ -153,7 +153,7 @@ export default function FrameSequenceHero() {
                     </span>
                   ))}
                 </h1>
-                <p className="desc mt-6 text-lg sm:text-xl md:text-2xl text-foreground/90 leading-relaxed drop-shadow-md">
+                <p className="desc max-w-[40vw] mt-6 text-lg sm:text-xl md:text-2xl text-foreground/90 leading-relaxed drop-shadow-md">
                   {item.desc}
                 </p>
               </div>

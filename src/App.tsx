@@ -30,7 +30,7 @@ function App() {
       const centerY = window.innerHeight / 2 - 50 - 16;
 
       const isMobile = window.innerWidth < 768;
-      const logoScale = isMobile ? 4 : 8;
+      const logoScale = isMobile ? 3.5 : 8;
 
       tl.set(logoRef.current, {
         x: centerX,
@@ -131,7 +131,9 @@ function App() {
       </section>
 
       {/* Specialty */}
-      <SpecialtySection />
+      <section id="specialty">
+        <SpecialtySection />
+      </section>
 
       {/* Menu */}
       <section id="menu">
@@ -139,7 +141,9 @@ function App() {
       </section>
 
       {/* Testimonials */}
-      <TestimonialSection />
+      <section id="testimonials">
+        <TestimonialSection />
+      </section>
 
       {/* Contact */}
       <section id="contact">
@@ -147,7 +151,9 @@ function App() {
       </section>
 
       {/* Footer */}
-      <Footer />
+      <section id="footer">
+        <Footer />
+      </section>
     </div>
   );
 }

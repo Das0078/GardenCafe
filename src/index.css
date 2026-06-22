@@ -23,9 +23,7 @@ body {
   color: var(--foreground);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+
 body {
   overflow-x: hidden;
 }
