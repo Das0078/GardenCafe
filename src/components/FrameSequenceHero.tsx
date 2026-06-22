@@ -153,7 +153,7 @@ export default function FrameSequenceHero() {
                     </span>
                   ))}
                 </h1>
-                <p className="desc max-w-[40vw] mt-6 text-lg sm:text-xl md:text-2xl text-foreground/90 leading-relaxed drop-shadow-md">
+                <p className="desc max-w-[50vw] md:max-w-[40vw] mt-6 text-sm sm:text-lg md:text-2xl text-foreground/90 leading-relaxed drop-shadow-md">
                   {item.desc}
                 </p>
               </div>
